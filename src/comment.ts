@@ -1,6 +1,4 @@
-import * as github from '@actions/github'
 import type { GitHub } from '@actions/github/lib/utils'
-import type { PullRequestEvent } from '@octokit/webhooks-types'
 import type { RenderedPlan } from './render'
 
 function renderResources(resources: Record<string, string>): string {
@@ -69,11 +67,11 @@ export function renderComment({
 
   // Build footer
   let footer = ''
-  if (includeFooter === undefined || includeFooter === true) {
-    footer =
-      `\n\n---\n\n_Triggered by @${github.context.actor},` +
-      ` Commit: \`${(github.context.payload as PullRequestEvent).pull_request.head.sha}\`_`
-  }
+  // if (includeFooter === undefined || includeFooter === true) {
+  //   footer =
+  //     `\n\n---\n\n_Triggered by @${github.context.actor},` +
+  //     ` Commit: \`${(github.context.payload as PullRequestEvent).pull_request.head.sha}\`_`
+  // }
 
   return `${header}\n\n${body}${footer}`
 }
