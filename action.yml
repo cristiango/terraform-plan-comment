@@ -22,6 +22,15 @@ inputs:
   id:
     description: A unique ID for the Terraform deployment.
     required: false
+  repo:
+    description: The repository to post the comment to.
+    required: false
+  owner:
+    description: The owner of the repository to post the comment to.
+    required: false
+  issue-number:
+    description: The pull request number to post the comment to.
+    required: false
 runs:
   using: node20
   main: dist/index.js

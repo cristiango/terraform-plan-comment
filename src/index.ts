@@ -10,7 +10,10 @@ async function run() {
     planfile: core.getInput('planfile', { required: true }),
     terraformCmd: core.getInput('terraform-cmd', { required: true }),
     workingDirectory: core.getInput('working-directory', { required: true }),
-    id: core.getInput('id')
+    id: core.getInput('id'),
+    repo: core.getInput('repo') || github.context.repo.repo,
+    owner: core.getInput('owner') || github.context.repo.owner,
+    issueNumber: Number.parseInt(core.getInput('issue-number')) || github.context.issue.number
   }
   const octokit = github.getOctokit(inputs.token)
 
@@ -26,7 +29,13 @@ async function run() {
   // 3) Post comment
   await core.group('Render comment', () => {
     const comment = renderComment({ plan, id: inputs.id })
-    return createOrUpdateComment({ octokit, content: comment })
+    return createOrUpdateComment({
+      octokit,
+      content: comment,
+      owner: inputs.owner,
+      repo: inputs.repo,
+      issueNumber: inputs.issueNumber
+    })
   })
 }
 

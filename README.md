@@ -76,3 +76,7 @@ The directory where the Terraform binary ought to be called. Defaults to `$GITHU
 
 A custom identifier for the Terraform execution. This allows to distinguish multiple Terraform runs: each sticky pull
 request comment is tied to an ID.
+
+### `repo`
+
+The repository to post the comment to. Defaults to the current repository.

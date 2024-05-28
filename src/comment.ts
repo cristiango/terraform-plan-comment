@@ -1,5 +1,5 @@
-import type { GitHub } from '@actions/github/lib/utils'
 import * as github from '@actions/github'
+import type { GitHub } from '@actions/github/lib/utils'
 import type { PullRequestEvent } from '@octokit/webhooks-types'
 import type { RenderedPlan } from './render'
 
@@ -80,16 +80,22 @@ export function renderComment({
 
 export async function createOrUpdateComment({
   octokit,
-  content
+  content,
+  owner,
+  repo,
+  issueNumber
 }: {
   octokit: InstanceType<typeof GitHub>
   content: string
+  owner: string
+  repo: string
+  issueNumber: number
 }): Promise<void> {
   // Get all PR comments
   const comments = await octokit.rest.issues.listComments({
-    owner: github.context.repo.owner,
-    repo: github.context.repo.repo,
-    issue_number: github.context.issue.number
+    owner,
+    repo,
+    issue_number: issueNumber
   })
 
   // Check if any comment already starts with the header that we expect. If so,
@@ -98,8 +104,8 @@ export async function createOrUpdateComment({
   for (const comment of comments.data) {
     if (comment.body?.startsWith(header)) {
       await octokit.rest.issues.updateComment({
-        owner: github.context.repo.owner,
-        repo: github.context.repo.repo,
+        owner,
+        repo,
         comment_id: comment.id,
         body: content
       })
@@ -109,9 +115,9 @@ export async function createOrUpdateComment({
 
   // Otherwise, post a new comment.
   await octokit.rest.issues.createComment({
-    owner: github.context.repo.owner,
-    repo: github.context.repo.repo,
-    issue_number: github.context.issue.number,
+    owner,
+    repo,
+    issue_number: issueNumber,
     body: content
   })
 }
